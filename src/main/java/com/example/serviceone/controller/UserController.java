@@ -8,6 +8,6 @@ public class UserController {
 
     @GetMapping("/")
     public String index() {
-        return "Greetings from Spring Boot for version 1!";
+        return "Greetings from Spring Boot for version 5!";
     }
 }
