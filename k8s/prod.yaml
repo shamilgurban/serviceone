@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: serviceone
-          image: registry.kapitalbank.az/sre/serviceone:1.0.0
+          image: registry.kapitalbank.az/sre/serviceone:1.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
