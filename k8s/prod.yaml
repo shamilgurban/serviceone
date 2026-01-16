@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: serviceone
+      app: serviceone-app
   template:
     metadata:
       labels:
-        app: serviceone
+        app: serviceone-app
     spec:
       containers:
         - name: serviceone
@@ -28,7 +28,7 @@ metadata:
   name: serviceone
 spec:
   selector:
-    app: serviceone
+    app: serviceone-app
   ports:
     - name: http
       port: 80
