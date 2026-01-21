@@ -41,8 +41,8 @@ spec:
     - name: kubelet-inflight-requests
       interval: 10s
       count: 3
-      successCondition: result[0] > 1000
-      failureCondition: result[0] <= 1000
+      successCondition: result[0] > 300
+      failureCondition: result[0] <= 300
       provider:
         prometheus:
           address: http://mimir-lab-query-frontend.mimir:8080/prometheus/
