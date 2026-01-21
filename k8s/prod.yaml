@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       annotations:
-        forceRestartVersion: "1"
+        forceRestartVersion: "2"
       labels:
         app: serviceone-app
     spec:
@@ -39,10 +39,11 @@ metadata:
 spec:
   metrics:
     - name: kubelet-inflight-requests
+      initialDelay: 30s
       interval: 10s
       count: 3
-      successCondition: result[0] > 1000
-      failureCondition: result[0] <= 1000
+      successCondition: result[0] > 15
+      failureCondition: result[0] <= 15
       provider:
         prometheus:
           address: http://mimir-lab-query-frontend.mimir:8080/prometheus/
@@ -51,7 +52,7 @@ spec:
             - key: X-Scope-OrgID
               value: all-lab
           query: |
-            sum(kubelet_http_inflight_requests)
+            sum(remote_vault_auth_total)
 ---
 apiVersion: v1
 kind: Service
