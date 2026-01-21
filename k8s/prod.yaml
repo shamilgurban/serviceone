@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: serviceone
-          image: shamilgurban/serviceone:1.0.0
+          image: shamilgurban/serviceone:1.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -28,7 +28,7 @@ spec:
       activeService: serviceone-stable
       previewService: serviceone-preview
       autoPromotionEnabled: true
-      prePromotionAnalysis:
+      postPromotionAnalysis:
         templates:
           - templateName: serviceone-mimir-inflight
 ---
