@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: serviceone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serviceone-app
+  template:
+    metadata:
+      annotations:
+        forceRestartVersion: "1"
+      labels:
+        app: serviceone-app
+    spec:
+      containers:
+        - name: serviceone
+          image: shamilgurban/serviceone:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+  strategy:
+    blueGreen:
+      activeService: serviceone-stable
+      previewService: serviceone-preview
+      autoPromotionEnabled: true
+      prePromotionAnalysis:
+        templates:
+          - templateName: serviceone-mimir-inflight
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: serviceone-mimir-inflight
+spec:
+  metrics:
+    - name: kubelet-inflight-requests
+      interval: 10s
+      count: 3
+      successCondition: result[0] > 300
+      failureCondition: result[0] <= 300
+      provider:
+        prometheus:
+          address: http://mimir-lab-query-frontend.mimir:8080/prometheus/
+          insecure: true
+          headers:
+            - key: X-Scope-OrgID
+              value: all-lab
+          query: |
+            sum(kubelet_http_inflight_requests)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviceone-stable
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: serviceone-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviceone-preview
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: serviceone-app
